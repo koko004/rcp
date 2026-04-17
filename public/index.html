@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos RCP - Salvacorazones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: calc(100vh - 40px);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .course-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .course-info h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+        }
+
+        .course-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .course-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .course-box.complete {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1a237e;
+        }
+
+        .date-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .date-options label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: normal;
+        }
+
+        .date-options input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .date-options input:checked + span {
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #a33525;
+        }
+
+        .login-link {
+            position: relative;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .page-footer {
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.9);
+            color: #1a237e;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .login-btn:hover {
+            background: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-content h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #1a237e;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .required::after {
+            content: " *";
+            color: #1a237e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo" style="max-width: 200px; margin-bottom: 15px;">
+            <h1>Cursos de RCP - Salvacorazones</h1>
+            <p>Real Federación de Fútbol del Principado de Asturias</p>
+        </div>
+
+        <div class="card">
+            <div class="course-info" id="course-info">
+                <h3>Cursos Disponibles</h3>
+                <div class="course-box complete">
+                    <strong>Salvacorazones: RCP y DEA</strong> (curso completo)
+                    <p>Horario: 16:00 - 22:00 (6 horas)</p>
+                    <p>Lugares: Oviedo, Avilés, Gijón, Mieres</p>
+                </div>
+                <div class="course-box">
+                    <strong>Reciclaje Salvacorazones</strong> (reciclaje)
+                    <p>Horario: 16:00 - 19:00 (3 horas)</p>
+                    <p>Lugares: Oviedo, Avilés, Gijón, Mieres</p>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage" style="display: none;">
+                ¡Te has inscrito correctamente! Nos pondremos en contacto contigo.
+            </div>
+
+            <div id="successPage" style="display: none; text-align: center; padding: 40px 20px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">✓</div>
+                <h2 style="color: #1a237e; margin-bottom: 20px;">¡Inscripción Completada!</h2>
+                <p style="font-size: 18px; color: #555; margin-bottom: 30px;">Te has inscrito correctamente en el curso.</p>
+                <p style="color: #555; margin-bottom: 10px;">Recibe shortly recibirás un correo electrónico con más información.</p>
+                <button type="button" class="btn" onclick="showForm()" style="margin-top: 30px; max-width: 200px;">Nueva Inscripción</button>
+            </div>
+
+<form id="registrationForm">
+                <div class="form-group">
+                    <label class="required">Lugar</label>
+                    <select id="lugar" required>
+                        <option value="">Selecciona el lugar</option>
+                        <option value="Gijón">Gijón</option>
+                        <option value="Oviedo">Oviedo</option>
+                        <option value="Avilés">Avilés</option>
+                        <option value="Mieres">Mieres</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="courseTypeGroup" style="display: none;">
+                    <label class="required">Tipo de Curso</label>
+                    <select id="courseType" required>
+                        <option value="">Selecciona el tipo de curso</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="dateOptionsGroup" style="display: none;">
+                    <label class="required">Preferencia de Fechas (elige dos)</label>
+                    <div class="date-options" id="dateOptionsContainer">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Nombre</label>
+                    <input type="text" id="nombre" required placeholder="Introduce tu nombre">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Apellidos</label>
+                    <input type="text" id="apellidos" required placeholder="Introduce tus apellidos">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNacimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">DNI</label>
+                    <input type="text" id="dni" required placeholder="Introduce tu DNI" maxlength="9">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Teléfono</label>
+                    <input type="tel" id="telefono" required placeholder="Introduce tu teléfono">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Email</label>
+                    <input type="email" id="email" required placeholder="Introduce tu email">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Club</label>
+                    <input type="text" id="club" required placeholder="Introduce el nombre de tu club">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Responsable del Club</label>
+                    <input type="text" id="responsable" required placeholder="Introduce el nombre del responsable">
+                </div>
+
+                <button type="submit" class="btn">Inscribirse</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeLoginModal()">&times;</span>
+            <h2>Acceso Administrator</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <span class="modal-close" onclick="closeAdminModal()">&times;</span>
+            <div class="admin-header">
+                <h2>Panel de Administración</h2>
+                <div>
+                    <button class="btn btn-secondary" onclick="downloadCSV()">Descargar CSV</button>
+                    <button class="btn btn-danger" onclick="logout()">Salir</button>
+                </div>
+            </div>
+            <div id="adminContent">
+                <p>No hay inscritos aún.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lugarCourses = {
+            'Gijón': {
+                completo: [
+                    {date: '5 mayo', label: '5 de mayo - Curso Completo (16:00-22:00)'},
+                    {date: '12 mayo', label: '12 de mayo - Curso Completo (16:00-22:00)'}
+                ],
+                reciclaje: [
+                    {date: '5 mayo', label: '5 de mayo - Reciclaje (16:00-19:00)'},
+                    {date: '12 mayo', label: '12 de mayo - Reciclaje (16:00-19:00)'}
+                ]
+            },
+            'Oviedo': {
+                completo: [{date: '5 mayo', label: '5 de mayo - Curso Completo (16:00-22:00)'}, {date: '13 mayo', label: '13 de mayo - Curso Completo (16:00-22:00)'}],
+                reciclaje: [{date: '6 mayo', label: '6 de mayo - Reciclaje (16:00-19:00)'}, {date: '12 mayo', label: '12 de mayo - Reciclaje (16:00-19:00)'}]
+            },
+            'Avilés': {
+                completo: [{date: '5 mayo', label: '5 de mayo - Curso Completo (16:00-22:00)'}, {date: '13 mayo', label: '13 de mayo - Curso Completo (16:00-22:00)'}],
+                reciclaje: [{date: '6 mayo', label: '6 de mayo - Reciclaje (16:00-19:00)'}, {date: '12 mayo', label: '12 de mayo - Reciclaje (16:00-19:00)'}]
+            },
+            'Mieres': {
+                completo: [{date: '5 mayo', label: '5 de mayo - Curso Completo (16:00-22:00)'}, {date: '13 mayo', label: '13 de mayo - Curso Completo (16:00-22:00)'}],
+                reciclaje: [{date: '6 mayo', label: '6 de mayo - Reciclaje (16:00-19:00)'}, {date: '12 mayo', label: '12 de mayo - Reciclaje (16:00-19:00)'}]
+            }
+        };
+
+        document.getElementById('lugar').addEventListener('change', function() {
+            const lugar = this.value;
+            const courseTypeGroup = document.getElementById('courseTypeGroup');
+            const courseTypeSelect = document.getElementById('courseType');
+            const dateOptionsGroup = document.getElementById('dateOptionsGroup');
+
+            if (!lugar) {
+                courseTypeGroup.style.display = 'none';
+                dateOptionsGroup.style.display = 'none';
+                return;
+            }
+
+            courseTypeGroup.style.display = 'block';
+            courseTypeSelect.innerHTML = '<option value="">Selecciona el tipo de curso</option>';
+
+            const courses = lugarCourses[lugar];
+            if (courses) {
+                if (courses.completo && courses.completo.length > 0) {
+                    courseTypeSelect.innerHTML += '<option value="completo">Salvacorazones: RCP y DEA (Curso Completo)</option>';
+                }
+                if (courses.reciclaje && courses.reciclaje.length > 0) {
+                    courseTypeSelect.innerHTML += '<option value="reciclaje">Reciclaje Salvacorazones</option>';
+                }
+            }
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const checkboxes = document.querySelectorAll('input[name="fecha"]:checked');
+            if (checkboxes.length < 2) {
+                alert('Por favor, selecciona dos fechas de preferencia.');
+                return;
+            }
+
+            const formData = {
+                courseType: document.getElementById('courseType').value,
+                nombre: document.getElementById('nombre').value,
+                apellidos: document.getElementById('apellidos').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                dni: document.getElementById('dni').value,
+                telefono: document.getElementById('telefono').value,
+                email: document.getElementById('email').value,
+                club: document.getElementById('club').value,
+                responsable: document.getElementById('responsable').value,
+                fecha1: checkboxes[0].value,
+                fecha2: checkboxes[1].value,
+                lugar: document.getElementById('lugar').value,
+                fechaRegistro: new Date().toISOString()
+            };
+
+            try {
+                await fetch('/api/inscripciones', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+            } catch (err) {
+                console.error('Error al guardar:', err);
+            }
+
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('course-info').style.display = 'none';
+            document.getElementById('successPage').style.display = 'block';
+            window.scrollTo(0, 0);
+        });
+
+function showForm() {
+            document.getElementById('registrationForm').reset();
+            document.getElementById('registrationForm').style.display = 'block';
+            document.getElementById('course-info').style.display = 'block';
+            document.getElementById('successPage').style.display = 'none';
+            document.getElementById('courseTypeGroup').style.display = 'none';
+            document.getElementById('dateOptionsGroup').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        document.getElementById('courseType').addEventListener('change', function() {
+            const courseType = this.value;
+            const lugar = document.getElementById('lugar').value;
+            const dateOptionsGroup = document.getElementById('dateOptionsGroup');
+            const dateOptionsContainer = document.getElementById('dateOptionsContainer');
+
+            if (!courseType || !lugar) {
+                dateOptionsGroup.style.display = 'none';
+                return;
+            }
+
+            const courses = lugarCourses[lugar];
+            const dates = courseType === 'completo' ? courses.completo : courses.reciclaje;
+
+            dateOptionsGroup.style.display = 'block';
+            dateOptionsContainer.innerHTML = '';
+
+            dates.forEach(d => {
+                dateOptionsContainer.innerHTML += `
+                    <label>
+                        <input type="checkbox" name="fecha" value="${d.date}">
+                        <span>${d.label}</span>
+                    </label>
+                `;
+            });
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const checkboxes = document.querySelectorAll('input[name="fecha"]:checked');
+            if (checkboxes.length < 2) {
+                alert('Por favor, selecciona dos fechas de preferencia.');
+                return;
+            }
+
+            const formData = {
+                courseType: document.getElementById('courseType').value,
+                nombre: document.getElementById('nombre').value,
+                apellidos: document.getElementById('apellidos').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                dni: document.getElementById('dni').value,
+                telefono: document.getElementById('telefono').value,
+                email: document.getElementById('email').value,
+                club: document.getElementById('club').value,
+                responsable: document.getElementById('responsable').value,
+                fecha1: checkboxes[0].value,
+                fecha2: checkboxes[1].value,
+                lugar: document.getElementById('lugar').value,
+                fechaRegistro: new Date().toISOString()
+            };
+
+            let inscripciones = JSON.parse(localStorage.getItem('inscripciones') || '[]');
+            inscripciones.push(formData);
+            localStorage.setItem('inscripciones', JSON.stringify(inscripciones));
+
+            document.getElementById('registrationForm').reset();
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('course-info').style.display = 'none';
+            document.getElementById('successPage').style.display = 'block';
+            window.scrollTo(0, 0);
+        });
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+            document.getElementById('loginForm').reset();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('show');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'Federacion' && password === 'Faf12345*') {
+                closeLoginModal();
+                showAdminPanel();
+            } else {
+                alert('Usuario o contraseña incorrectos');
+            }
+        });
+
+        function showAdminPanel() {
+            const inscripciones = JSON.parse(localStorage.getItem('inscripciones') || '[]');
+            const adminContent = document.getElementById('adminContent');
+
+            if (inscripciones.length === 0) {
+                adminContent.innerHTML = '<p>No hay inscritos aún.</p>';
+            } else {
+                let html = `<p>Total de inscritos: ${inscripciones.length}</p>`;
+                html += '<table><thead><tr>';
+                html += '<th>Nombre</th><th>Apellidos</th><th>DNI</th><th>Teléfono</th><th>Email</th><th>Club</th><th>Tipo Curso</th><th>Lugar</th><th>Fechas</th>';
+                html += '</tr></thead><tbody>';
+
+                inscripciones.forEach(insc => {
+                    const nombreCurso = insc.courseType === 'completo' ? 'Salvacorazones RCP y DEA' : 'Reciclaje Salvacorazones';
+                    html += `<tr>`;
+                    html += `<td>${insc.nombre}</td>`;
+                    html += `<td>${insc.apellidos}</td>`;
+                    html += `<td>${insc.dni}</td>`;
+                    html += `<td>${insc.telefono}</td>`;
+                    html += `<td>${insc.email}</td>`;
+                    html += `<td>${insc.club}</td>`;
+                    html += `<td>${nombreCurso}</td>`;
+                    html += `<td>${insc.lugar}</td>`;
+                    html += `<td>${insc.fecha1}, ${insc.fecha2}</td>`;
+                    html += `</tr>`;
+                });
+
+                html += '</tbody></table>';
+                adminContent.innerHTML = html;
+            }
+
+            document.getElementById('adminModal').classList.add('show');
+        }
+
+        function downloadCSV() {
+            const inscripciones = JSON.parse(localStorage.getItem('inscripciones') || '[]');
+
+            if (inscripciones.length === 0) {
+                alert('No hay datos para descargar.');
+                return;
+            }
+
+            let csv = 'Tipo de Curso,Nombre,Apellidos,Fecha de Nacimiento,DNI,Teléfono,Email,Club,Responsable,Lugar,Fecha Preferida 1,Fecha Preferida 2,Fecha de Registro\n';
+
+            inscripciones.forEach(insc => {
+                const nombreCurso = insc.courseType === 'completo' ? 'Salvacorazones RCP y DEA' : 'Reciclaje Salvacorazones';
+                csv += `"${nombreCurso}","${insc.nombre}","${insc.apellidos}","${insc.fechaNacimiento}","${insc.dni}","${insc.telefono}","${insc.email}","${insc.club}","${insc.responsable}","${insc.lugar}","${insc.fecha1}","${insc.fecha2}","${insc.fechaRegistro}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'inscripciones_rcp_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+        }
+
+        function logout() {
+            closeAdminModal();
+            alert('Sesión cerrada');
+        }
+    </script>
+</body>
+</html>

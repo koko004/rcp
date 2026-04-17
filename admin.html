@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Cursos RCP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #1a237e;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .info {
+            color: #666;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.png" alt="Logo" style="max-width: 80px;">
+                <h1>Panel de Administración</h1>
+            </div>
+            <div>
+                <button class="btn btn-secondary" onclick="downloadCSV()">Descargar CSV</button>
+                <a href="index.html" class="btn btn-danger">Salir</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="info" id="info"></div>
+            <div id="adminContent">
+                <div class="no-data">Cargando datos...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if (!sessionStorage.getItem('adminToken')) {
+            window.location.href = 'login.html';
+        }
+
+        async function loadInscripciones() {
+            try {
+                const response = await fetch('/api/inscripciones', {
+                    headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }
+                });
+                const inscripciones = await response.json();
+                const adminContent = document.getElementById('adminContent');
+                const info = document.getElementById('info');
+
+                if (inscripciones.length === 0) {
+                    adminContent.innerHTML = '<div class="no-data">No hay inscritos aún.</div>';
+                } else {
+                    info.textContent = `Total de inscritos: ${inscripciones.length}`;
+                    
+                    let html = '<table><thead><tr>';
+                    html += '<th>Nombre</th><th>Apellidos</th><th>DNI</th><th>Teléfono</th><th>Email</th><th>Club</th><th>Responsable</th><th>Tipo Curso</th><th>Lugar</th><th>Fechas</th>';
+                    html += '</tr></thead><tbody>';
+
+                    inscripciones.forEach(insc => {
+                        const nombreCurso = insc.courseType === 'completo' ? 'Salvacorazones RCP y DEA' : 'Reciclaje Salvacorazones';
+                        html += `<tr>`;
+                        html += `<td>${insc.nombre}</td>`;
+                        html += `<td>${insc.apellidos}</td>`;
+                        html += `<td>${insc.dni}</td>`;
+                        html += `<td>${insc.telefono}</td>`;
+                        html += `<td>${insc.email}</td>`;
+                        html += `<td>${insc.club}</td>`;
+                        html += `<td>${insc.responsable}</td>`;
+                        html += `<td>${nombreCurso}</td>`;
+                        html += `<td>${insc.lugar}</td>`;
+                        html += `<td>${insc.fecha1}, ${insc.fecha2}</td>`;
+                        html += `</tr>`;
+                    });
+
+                    html += '</tbody></table>';
+                    adminContent.innerHTML = html;
+                }
+
+                window.inscripcionesData = inscripciones;
+            } catch (err) {
+                document.getElementById('adminContent').innerHTML = '<div class="no-data">Error al cargar los datos.</div>';
+            }
+        }
+
+        function downloadCSV() {
+            const inscripciones = window.inscripcionesData || [];
+            if (inscripciones.length === 0) {
+                alert('No hay datos para descargar.');
+                return;
+            }
+
+            let csv = 'Tipo de Curso,Nombre,Apellidos,Fecha de Nacimiento,DNI,Teléfono,Email,Club,Responsable,Lugar,Fecha Preferida 1,Fecha Preferida 2,Fecha de Registro\n';
+
+            inscripciones.forEach(insc => {
+                const nombreCurso = insc.courseType === 'completo' ? 'Salvacorazones RCP y DEA' : 'Reciclaje Salvacorazones';
+                csv += `"${nombreCurso}","${insc.nombre}","${insc.apellidos}","${insc.fechaNacimiento}","${insc.dni}","${insc.telefono}","${insc.email}","${insc.club}","${insc.responsable}","${insc.lugar}","${insc.fecha1}","${insc.fecha2}","${insc.fechaRegistro}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'inscripciones_rcp_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+        }
+
+        loadInscripciones();
+    </script>
+</body>
+</html>

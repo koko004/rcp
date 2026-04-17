@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  rcp-app:
+    build: .
+    ports:
+      - "${PORT:-6500}:80"
+    environment:
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASS=${ADMIN_PASS}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
