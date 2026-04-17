@@ -55,6 +55,13 @@ Aplicación web para la gestión de inscripciones a cursos de RCP y desfibrilado
    docker-compose up -d --build
    ```
 
+O si solo quieres usar la imagen pre-construida:
+   ```bash
+   docker-compose up -d
+   ```
+
+### Despliegue con Docker Run
+
 ### Variables de entorno
 
 | Variable | Descripción | Valor por defecto |
@@ -62,12 +69,47 @@ Aplicación web para la gestión de inscripciones a cursos de RCP y desfibrilado
 | PORT | Puerto de la aplicación | 6500 |
 | ADMIN_USER | Usuario administrador | Federacion |
 | ADMIN_PASS | Contraseña administrador | Faf12345* |
+| EMAIL_HOST | Servidor SMTP | smtp.gmail.com |
+| EMAIL_PORT | Puerto SMTP | 587 |
+| EMAIL_USER | Usuario email (SMTP) | - |
+| EMAIL_PASS | Contraseña email (SMTP) | - |
+| EMAIL_FROM | Email remitente | noreply@rcp-cursos.com |
 
 Ejemplo de `.env`:
 ```env
 PORT=6500
 ADMIN_USER=MiUsuario
 ADMIN_PASS=MiContrasena123
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=tuemail@gmail.com
+EMAIL_PASS=tu_contraseña_de_aplicacion
+EMAIL_FROM=inscripciones@midominio.com
+```
+
+### Despliegue con Docker Run
+
+```bash
+# Con todas las variables
+docker run -d -p 6500:80 \
+  -v $(pwd)/data:/app/data \
+  -e PORT=80 \
+  -e ADMIN_USER=Federacion \
+  -e ADMIN_PASS=Faf12345* \
+  -e EMAIL_HOST=smtp.gmail.com \
+  -e EMAIL_PORT=587 \
+  -e EMAIL_USER=tuemail@gmail.com \
+  -e EMAIL_PASS=tu_contraseña \
+  -e EMAIL_FROM=inscripciones@midominio.com \
+  --name rcp-cursos \
+  koko004/rcp-cursos:latest
+
+# O usando archivo .env
+docker run -d -p 6500:80 \
+  -v $(pwd)/data:/app/data \
+  --env-file .env \
+  --name rcp-cursos \
+  koko004/rcp-cursos:latest
 ```
 
 ### Acceder a la aplicación
