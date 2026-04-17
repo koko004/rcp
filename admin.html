@@ -145,7 +145,7 @@
                     info.textContent = `Total de inscritos: ${inscripciones.length}`;
                     
                     let html = '<table><thead><tr>';
-                    html += '<th>Nombre</th><th>Apellidos</th><th>DNI</th><th>Teléfono</th><th>Email</th><th>Club</th><th>Responsable</th><th>Tipo Curso</th><th>Lugar</th><th>Fechas</th>';
+                    html += '<th>Nombre</th><th>Apellidos</th><th>DNI</th><th>Teléfono</th><th>Email</th><th>Club</th><th>Email Club</th><th>Responsable</th><th>Tipo Curso</th><th>Lugar</th><th>Fecha</th>';
                     html += '</tr></thead><tbody>';
 
                     inscripciones.forEach(insc => {
@@ -157,10 +157,11 @@
                         html += `<td>${insc.telefono}</td>`;
                         html += `<td>${insc.email}</td>`;
                         html += `<td>${insc.club}</td>`;
+                        html += `<td>${insc.emailClub || ''}</td>`;
                         html += `<td>${insc.responsable}</td>`;
                         html += `<td>${nombreCurso}</td>`;
                         html += `<td>${insc.lugar}</td>`;
-                        html += `<td>${insc.fecha1}, ${insc.fecha2}</td>`;
+                        html += `<td>${insc.fecha || ''}</td>`;
                         html += `</tr>`;
                     });
 
@@ -181,11 +182,11 @@
                 return;
             }
 
-            let csv = 'Tipo de Curso,Nombre,Apellidos,Fecha de Nacimiento,DNI,Teléfono,Email,Club,Responsable,Lugar,Fecha Preferida 1,Fecha Preferida 2,Fecha de Registro\n';
+            let csv = 'Tipo de Curso,Nombre,Apellidos,Fecha de Nacimiento,DNI,Teléfono,Email,Club,Email Club,Responsable,Lugar,Fecha,Fecha de Registro\n';
 
             inscripciones.forEach(insc => {
                 const nombreCurso = insc.courseType === 'completo' ? 'Salvacorazones RCP y DEA' : 'Reciclaje Salvacorazones';
-                csv += `"${nombreCurso}","${insc.nombre}","${insc.apellidos}","${insc.fechaNacimiento}","${insc.dni}","${insc.telefono}","${insc.email}","${insc.club}","${insc.responsable}","${insc.lugar}","${insc.fecha1}","${insc.fecha2}","${insc.fechaRegistro}"\n`;
+                csv += `"${nombreCurso}","${insc.nombre}","${insc.apellidos}","${insc.fechaNacimiento}","${insc.dni}","${insc.telefono}","${insc.email}","${insc.club}","${insc.emailClub || ''}","${insc.responsable}","${insc.lugar}","${insc.fecha || ''}","${insc.fechaRegistro}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

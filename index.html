@@ -334,7 +334,7 @@
                 </div>
 
                 <div class="form-group" id="dateOptionsGroup" style="display: none;">
-                    <label class="required">Preferencia de Fechas (elige dos)</label>
+                    <label class="required">Preferencia de Fecha</label>
                     <div class="date-options" id="dateOptionsContainer">
                     </div>
                 </div>
@@ -360,18 +360,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="required">Teléfono</label>
+                    <label class="required">Teléfono del alumno</label>
                     <input type="tel" id="telefono" required placeholder="Introduce tu teléfono">
                 </div>
 
                 <div class="form-group">
-                    <label class="required">Email</label>
+                    <label class="required">Email del alumno</label>
                     <input type="email" id="email" required placeholder="Introduce tu email">
                 </div>
 
                 <div class="form-group">
                     <label class="required">Club</label>
                     <input type="text" id="club" required placeholder="Introduce el nombre de tu club">
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Email del club</label>
+                    <input type="email" id="emailClub" placeholder="Introduce el email del club">
                 </div>
 
                 <div class="form-group">
@@ -474,10 +479,7 @@
             e.preventDefault();
 
             const checkboxes = document.querySelectorAll('input[name="fecha"]:checked');
-            if (checkboxes.length < 2) {
-                alert('Por favor, selecciona dos fechas de preferencia.');
-                return;
-            }
+            const fechaSeleccionada = checkboxes.length > 0 ? checkboxes[0].value : '';
 
             const formData = {
                 courseType: document.getElementById('courseType').value,
@@ -488,9 +490,9 @@
                 telefono: document.getElementById('telefono').value,
                 email: document.getElementById('email').value,
                 club: document.getElementById('club').value,
+                emailClub: document.getElementById('emailClub').value,
                 responsable: document.getElementById('responsable').value,
-                fecha1: checkboxes[0].value,
-                fecha2: checkboxes[1].value,
+                fecha: fechaSeleccionada,
                 lugar: document.getElementById('lugar').value,
                 fechaRegistro: new Date().toISOString()
             };
