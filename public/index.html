@@ -475,55 +475,7 @@
             }
         });
 
-        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const checkboxes = document.querySelectorAll('input[name="fecha"]:checked');
-            const fechaSeleccionada = checkboxes.length > 0 ? checkboxes[0].value : '';
-
-            const formData = {
-                courseType: document.getElementById('courseType').value,
-                nombre: document.getElementById('nombre').value,
-                apellidos: document.getElementById('apellidos').value,
-                fechaNacimiento: document.getElementById('fechaNacimiento').value,
-                dni: document.getElementById('dni').value,
-                telefono: document.getElementById('telefono').value,
-                email: document.getElementById('email').value,
-                club: document.getElementById('club').value,
-                emailClub: document.getElementById('emailClub').value,
-                responsable: document.getElementById('responsable').value,
-                fecha: fechaSeleccionada,
-                lugar: document.getElementById('lugar').value,
-                fechaRegistro: new Date().toISOString()
-            };
-
-            try {
-                await fetch('/api/inscripciones', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-            } catch (err) {
-                console.error('Error al guardar:', err);
-            }
-
-            document.getElementById('registrationForm').style.display = 'none';
-            document.getElementById('course-info').style.display = 'none';
-            document.getElementById('successPage').style.display = 'block';
-            window.scrollTo(0, 0);
-        });
-
-function showForm() {
-            document.getElementById('registrationForm').reset();
-            document.getElementById('registrationForm').style.display = 'block';
-            document.getElementById('course-info').style.display = 'block';
-            document.getElementById('successPage').style.display = 'none';
-            document.getElementById('courseTypeGroup').style.display = 'none';
-            document.getElementById('dateOptionsGroup').style.display = 'none';
-            window.scrollTo(0, 0);
-        }
-
-        document.getElementById('courseType').addEventListener('change', function() {
+document.getElementById('courseType').addEventListener('change', function() {
             const courseType = this.value;
             const lugar = document.getElementById('lugar').value;
             const dateOptionsGroup = document.getElementById('dateOptionsGroup');
@@ -554,10 +506,7 @@ function showForm() {
             e.preventDefault();
 
             const checkboxes = document.querySelectorAll('input[name="fecha"]:checked');
-            if (checkboxes.length < 2) {
-                alert('Por favor, selecciona dos fechas de preferencia.');
-                return;
-            }
+            const fechaSeleccionada = checkboxes.length > 0 ? checkboxes[0].value : '';
 
             const formData = {
                 courseType: document.getElementById('courseType').value,
